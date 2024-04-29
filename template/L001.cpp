@@ -1,8 +1,8 @@
 #include <iostream>
 
-// 简单的模板
+// 简单的模板 但是a和b必须是一个类型
 template<typename T>
-T max(T a, T b) {
+T max(T a, T b) { // T max(T a, T2 b) 试试
     return a > b ? a : b;
 }
 
@@ -33,6 +33,8 @@ void func1(T x) {
     }
 }
 int main() {
+    // 
+    // int x = max(1, 2);
     func<int>(1); // 123
     func<double>(1.0); // 123465
     func<std::string>("123");// 123465111
