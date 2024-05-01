@@ -10,6 +10,7 @@ void test(int&& x) {
     // 也就是说那种临时变量， 
 }
 
+int&& x = 100;
 template <typename T>
 void func (T&& x) { // 万能引用，能判断出传进来的是左值还是右值
     //T&& x, T&&是一个类型，x被当成左值，这也就是std::move(x)传进来下面调用函数时发现调用成右值的原因
