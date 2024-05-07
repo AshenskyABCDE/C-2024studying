@@ -311,6 +311,195 @@ kill -9 5105 强制杀死进程
 ```shell
 top
 ```
+## shell脚本
+
+开始最简单的shell, 我们可以vim hello.sh进行编写，bash hello.sh读写
+
+```shell
+echo "hello, world"
+```
+
+系统变量
+
+```shell
+$HOME $PWD ...
+```
+
+自定义变量
+
+```shell
+var="hello , world"
+echo var
+
+var=hello , world  #这种带有空格的不行，用上述引号的格式就可以解决
+```
+
+我们查看具体变量是全局变量还是局部变量
+
+```shell
+env | grep my_var
+set | grep my_var
+```
+
+将一个变量导出 变成全局变量
+
+```shell
+export $my_var
+env | grep my_var
+```
+
+整个流程
+
+```shell
+vim hello.sh # 创建shell脚本
+chmod +x hello.sh # 创建执行权限
+./hello.sh #就可以运行
+```
+
+特殊符号
+
+```shell
+$0 执行的脚本名称 $1 $2 脚本携带的参数
+$# 输出参数个数
+$@ 表示变量列表 
+$* 代表"$1 $2 $3" 默认用空格对变量进行分隔
+```
+
+用一个例子来看一下区别
+
+```shell
+# exmple.sh
+for arg in "$*"; do
+	echo $arg
+done
+
+echo "----------"
+
+for arg in "$@";do
+	echo $arg
+done
+
+#./exmple.sh "1 2 3 4 5" 2 3 4 5
+```
+
+输出为
+
+```markdown
+1 2 3 4 5 2 3 4 5
+
+----------------------
+
+1 2 3 4 5
+2
+3
+4
+5
+
+```
+
+所以说$*是作为一个整体
+
+```shell
+num=0
+for arg in "$@"; do
+	if [ arg == '123' ]; then
+		$((num++))
+	fi
+done
+
+echo $num
+```
+
+条件判断
+
+```shell
+数字类型比较
+-eq 等于
+-ne 不等于
+-lt 小于
+-le 不等于
+-gt 大于
+-ge 大于等于  e是equal 这样好记一些
+判断文件权限
+-r
+-w
+-x
+按照文件类型进行判断
+-e 文件存在
+-f 文件存在并且是一个常规的文件
+-d 文件存在并且是一个目录
+
+判断目录的cls.txt文件是否存在
+-e /home/atguigu/cls.txt
+```
+
+判断该目录是否有 参数1文件或参数2文件
+
+```shell
+if [ -e "$1" ]; then
+	echo "is right"
+elif [ -e "$2" ];then
+	echo "is second right"
+else
+	echo "is not right"
+fi
+```
+
+计算1-100之和
+
+```shell
+sum=0
+for ((i=1; i<=100 ;i++)); do
+	sum=$(($sum + $i))
+done
+echo $sum
+```
+
+读入
+
+```shell
+# -t 代表等待时间 -p 后面输出提示信息
+read -t 10 -p "please enter something." name
+echo "你写的是$name"
+```
+
+
+
+## linux c
+
+```markdown
+首先我们创建一个include目录,里面是add.h和sub.h
+创建一个src目录,里面是add.c和sub.c
+大概是./include ./src main.c 这样
+```
+
+静态库
+
+顾名思义就是编译完当成一个库使用,我们写一个makefile
+
+```makefile
+test: main.o add.o sub.o
+	gcc main.o add.o sub.o -o test
+	cp main.o add.o sub.o lib
+	ar rcs lib/libcal.a main.o add.o sub.o
+	gcc -o main main.o -Llib -lcal
+main.o: main.c
+	gcc main.c -c -o main.o
+add.o: add.c
+	gcc add.c -c -o add.o
+sub.o: sub.c
+	gcc sub.c -c -o sub.o
+```
+
+动态库
+
+```shell
+gcc -fPIC *.c -I include -c
+gcc -shared -o libmath.so *.o
+gcc main.c -L. -lmath -Iinclude -o test
+./test
+```
+
 
 
 
