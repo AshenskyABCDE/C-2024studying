@@ -92,6 +92,16 @@ service network restart 接着再查看ifconfig就发现ip地址已经改变 <br
 
 
 
+## 用vsftpd传输文件
+
+首先在windows下载filezilla
+
+新建站点连接linux虚拟机的ip地址
+
+拖拽文件即可
+
+
+
 ## 系统管理
 
 一个正在执行的程序或命令，被叫做进程<br>
