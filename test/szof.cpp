@@ -8,6 +8,5 @@ int main() {
     std::cout << sizeof(ss) << std::endl;
     int a[] = {1, 2, 4 ,5,6};
     std::cout << sizeof(a) << std::endl;  
-    string sss = "123456";
-    std::cout << sizeof(sss) << std::endl;   
+    
 }

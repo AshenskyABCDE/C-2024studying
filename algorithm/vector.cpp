@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 template <typename T>
 class Vector {
@@ -59,4 +60,15 @@ int main() {
     for(int i=0;i<10;i++) {
         std::cout << vec[i] << std::endl;
     } 
+
+
+    // 快速清空 std::vector 并释放其占用的内存
+    std::vector<int> vecc;
+    for (int i=0;  i < 100 ;i++) {
+        vecc.push_back(i);
+    }
+
+    vecc.clear();
+    vecc.shrink_to_fit();
+    std::cout <<  vecc.capacity() << std::endl; 
 }

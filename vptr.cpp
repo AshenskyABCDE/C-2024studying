@@ -31,5 +31,4 @@ int main(){
     std::cout << ptr << std::endl;
     std::cout << *reinterpret_cast<void***>(&a) << std::endl;
     std::cout << (int*)*(int*)&a << std::endl;
-    std::cout << (int*)*(int*)&a << std::endl;
 }

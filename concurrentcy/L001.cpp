@@ -39,11 +39,4 @@ int main() {
         thread.join();
     }
 
-    // 生命周期
-    {
-        std::thread th(hello);
-    }
-    {
-        std::thread th(hello); 
-    }
 }
