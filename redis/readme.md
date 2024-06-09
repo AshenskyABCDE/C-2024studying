@@ -20,6 +20,7 @@ redis-cli -h 127.0.0.1 -p 6379 -a password
 SET 增 （可直接覆盖)
 DEL 删
 GET 查
+KEYS *
 ```
 
 
@@ -122,4 +123,110 @@ ZRANGEBYSCORE test_STU 0 80
 ```
 
 
+
+# java实战
+
+常见的java命令
+
+```java
+public class TestStudyredisApplicationTests {
+    private Jedis jedis;
+    @BeforeEach
+    void setUp() {
+        jedis = new Jedis("192.168.245.129",6379);
+        jedis.auth("123456");
+        jedis.select(0);
+    }
+    @Test
+    void testString() {
+        String result = jedis.set("name", "zhang meng yao");
+        System.out.println("result = " + result);
+        String name = jedis.get("name");
+        System.out.println("name = " + name);
+    }
+    @Test
+    void testHashing() {
+        jedis.hset("user:1","name","zhang meng yao");
+        jedis.hset("user:1","age","123");
+        Map<String,String> mp = jedis.hgetAll("user:1");
+        System.out.println(mp);
+    }
+}
+```
+
+自行配置连接池
+
+```java
+public class JedisConnectionFactory {
+
+    private static final JedisPool jedisPool;
+    static {
+        JedisPoolConfig poolConfig = new JedisPoolConfig();
+        poolConfig.setMaxTotal(8);
+        poolConfig.setMaxIdle(8);
+        poolConfig.setMinIdle(0);
+        poolConfig.setMaxWaitMillis(1000);
+        jedisPool = new JedisPool(poolConfig,
+                "192.168.245.129",6379,1000,"123456");
+    }
+
+    public  static Jedis getJedis() {
+        return jedisPool.getResource();
+    }
+}
+```
+
+这样每次连接就不需要new一遍
+
+```java
+    @BeforeEach
+    void setUp() {
+//        jedis = new Jedis("192.168.245.129",6379);
+        jedis = JedisConnectionFactory.getJedis();
+        jedis.auth("123456");
+        jedis.select(0);
+    }
+```
+
+也可以在配置里
+
+```yaml
+spring:
+    data:
+        redis:
+            host: 
+            port: 6379
+            password: 
+            database: 0
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    min-idle: 0
+                    max-wait: 1000ms
+```
+
+```java
+@SpringBootTest
+class Redis1ApplicationTests {
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Test
+    void testString() {
+        redisTemplate.opsForValue().set("name", "zhang xiao yao");
+        Object name = redisTemplate.opsForValue().get("name");
+        System.out.println("name = " + name);
+    }
+
+}
+```
+
+```java
+redisTemplate.opsForValue()
+redisTemplate.opsForHash()
+redisTemplate.opsForList()
+redisTemplate.opsForSet()
+redisTemplate.opsForZset()
+```
 
